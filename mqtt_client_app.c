@@ -116,7 +116,7 @@
 
 /* Defining Broker IP address and port Number                                */
 //#define SERVER_ADDRESS           "messagesight.demos.ibm.com"
-//#define SERVER_ADDRESS           "m2m.eclipse.org"
+#define SERVER_ADDRESS           "192.168.2.3"
 #define SERVER_IP_ADDRESS        "192.168.2.3"
 #define PORT_NUMBER              1883
 #define SECURED_PORT_NUMBER      8883
@@ -145,7 +145,7 @@
 #define TASKSTACKSIZE            2048
 #define RXTASKSIZE               4096
 #define MQTTTHREADSIZE           2048
-#define SPAWN_TASK_PRIORITY      1
+#define SPAWN_TASK_PRIORITY      2
 #define THREADSIZE               2048
 
 /* secured client requires time configuration, in order to verify server     */
@@ -283,7 +283,7 @@ void setTime()
 #else
 MQTTClient_ConnParams Mqtt_ClientCtx =
 {
-    MQTTCLIENT_NETCONN_URL,
+    MQTTCLIENT_NETCONN_IP4,
     SERVER_IP_ADDRESS,
     PORT_NUMBER, 0, 0, 0,
     NULL
@@ -861,10 +861,17 @@ int32_t SetClientIdNamefromMacAddress()
 
 void mainThread(void * args)
 {
+//    sleep(2);
+
 //
 //    #ifdef UART_DEBUGGING
 //        sendMsgToUart("mainThread started\r\n\0");
 //    #endif
+
+//    sleep(3);
+
+//    createUartQueue();
+//    dbgUARTInit();
 
     pthread_t spawn_thread = (pthread_t) NULL;
     pthread_attr_t pAttrs_spawn;
@@ -880,8 +887,8 @@ void mainThread(void * args)
     SlNetSock_init(0);
     SlNetUtil_init(0);
 
-//    SPI_init();
-//    GPIO_init();
+    SPI_init();
+    GPIO_init();
 
     /*Create the sl_Task                                                     */
     pthread_attr_init(&pAttrs_spawn);
@@ -951,6 +958,7 @@ void mainThread(void * args)
     {
         sleep(1);
     }
+
 
 
 #ifdef UART_DEBUGGING

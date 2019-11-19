@@ -89,7 +89,7 @@ void errorRoutine(unsigned int outLoc)
     dbgOutputLoc(outLoc);
 
     // suspend all threads and disable interrupts
-    vTaskSuspendAll();
+//    vTaskSuspendAll();
 //    stop_timer();
 
 

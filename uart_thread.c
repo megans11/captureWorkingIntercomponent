@@ -24,6 +24,8 @@ void *uartThread(void *arg0)
     // Command variables
     char msg[UART_QUEUE_WIDTH] = "\r\nUart thread opened\r\n\0";
     dbgUARTVal(msg);
+
+    sendMsgToUart("blocking read in uart \r\n\0");
 //
 //    sleep(2);
 //
@@ -32,10 +34,10 @@ void *uartThread(void *arg0)
 
     while (1) {
 //        sendMsgToUart("blocking read in uart \r\n\0");
-        // blocking read from queue
+//         blocking read from queue
         readMsqFromUartQueue(msg);
-
-        // write to UART
+//
+//        // write to UART
         dbgUARTVal(msg);
     }
 }
