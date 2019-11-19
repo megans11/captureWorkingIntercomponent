@@ -92,13 +92,13 @@ Capture1.timer.$name = "MyTimer1";
 // Use Peripheral
 Capture1.timer.$assign = "Timer2";
 // Assign pin
-Capture1.timer.capturePin.$assign = "boosterpack.24"; // P60
+Capture1.timer.capturePin.$assign = "boosterpack.7"; // P05
 // Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
 GPIO3.$name = "Board_GPIO0";
 // Suggest solution
 SPI1.spi.$suggestSolution = "SPI0";
 // Suggest solution
-SPI1.spi.sclkPin.$suggestSolution = "5";
+SPI1.spi.sclkPin.$suggestSolution = "45";
 // Suggest solution
 SPI1.spi.misoPin.$suggestSolution = "53";
 // Suggest solution

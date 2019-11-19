@@ -81,6 +81,7 @@
 //#include "arm_control_queue.h"
 //#include "servo_control_queue.h"
 #include "jsonParse.h"
+#include "my_callback_files/distance_sensor_timer.h"
 
 //#include "timer.h"
 //
@@ -187,6 +188,8 @@ int32_t MQTT_connect();
 int16_t MQTT_subscribe();
 int16_t MQTT_publish(char * pubTopic, char * pubData);
 
+extern void *findDistanceTaskThread(void *arg0);
+//extern void *sensorMainThread(void *arg0);
 //extern void *armControlThread(void *arg0);
 //extern void *servoPositionThread(void *arg0);
 //**************************************************************************
@@ -416,8 +419,50 @@ void * MqttClient(void *pvParameters)
 //                }
 //            }
 
+    pthread_t Fthread;
+       pthread_attr_t FAttrs;
+       struct sched_param FpriParam;
+
+       /* Set priority and stack size attributes */
+       pthread_attr_init(&FAttrs);
+       FpriParam.sched_priority = 1;
+
+       int detachState = PTHREAD_CREATE_DETACHED;
+       int retc = pthread_attr_setdetachstate(&FAttrs, detachState);
+       if(retc != 0)
+       {
+           /* pthread_attr_setdetachstate() failed */
+           while(1)
+           {
+               ;
+           }
+       }
+
+       pthread_attr_setschedparam(&FAttrs, &FpriParam);
+
+       retc |= pthread_attr_setstacksize(&FAttrs, 2048);
+       if(retc != 0)
+       {
+           /* pthread_attr_setstacksize() failed */
+           while(1)
+           {
+               ;
+           }
+       }
+
+       retc = pthread_create(&Fthread, &FAttrs, findDistanceTaskThread, NULL);
+       if(retc != 0)
+       {
+           /* pthread_create() failed */
+           while(1)
+           {
+               ;
+           }
+       }
+
+
 #ifdef UART_DEBUGGING
-    sendMsgToUart("servo thread started\r\n\0");
+    sendMsgToUart(" init thread started\r\n\0");
 #endif
     //SERVO THREAD END ===============================================
 
@@ -742,6 +787,8 @@ int32_t MqttClient_start()
 
     gInitState &= ~CLIENT_INIT_STATE;
 
+    sleep(1);
+
     return(0);
 }
 
@@ -861,6 +908,7 @@ int32_t SetClientIdNamefromMacAddress()
 
 void mainThread(void * args)
 {
+    dbgUARTVal("in main thread");
 //    sleep(2);
 
 //
@@ -958,8 +1006,6 @@ void mainThread(void * args)
     {
         sleep(1);
     }
-
-
 
 #ifdef UART_DEBUGGING
     sendMsgToUart("mainThread finished\r\n\0");

@@ -15,16 +15,18 @@ void *findDistanceTaskThread(void *arg0)
 
 //    const char  echoPrompt[] = "Echoing characters:\r\n";
 //    UART_write(distanceSensorUART, echoPrompt, sizeof(echoPrompt));
+//
+//    if (create_DistanceTaskQueue() == CREATE_QUEUE_FAILURE)
+//    {
+////        errorRoutine(CONTROL_QUEUE_CREATE_FAILURE);
+////        printf("Queue creation failed.\n");
+//    }
+//    else
+//    {
+////        printf("Queue creation succeeded\n");
+//    }
 
-    if (create_DistanceTaskQueue() == CREATE_QUEUE_FAILURE)
-    {
-//        errorRoutine(CONTROL_QUEUE_CREATE_FAILURE);
-//        printf("Queue creation failed.\n");
-    }
-    else
-    {
-//        printf("Queue creation succeeded\n");
-    }
+    dbgUARTVal("in distance task thread");
 
     // Command variables
     int msg_type;

@@ -60,7 +60,8 @@
 
 extern void *mainThread(void *arg0);
 extern void *uartThread(void *arg0);
-extern void *findDistanceTaskThread(void *arg0);
+//extern void *findDistanceTaskThread(void *arg0);
+extern void *sensorMainThread(void *arg0);
 //extern void *armControlThread(void *arg0);
 //extern void *servoPositionThread(void *arg0);
 
@@ -73,6 +74,91 @@ extern void *findDistanceTaskThread(void *arg0);
  */
 int main(void)
 {
+//    pthread_t           thread;
+//    pthread_attr_t      attrs;
+//    struct sched_param  priParam;
+//    int                 retc;
+//
+//    Board_init();
+//
+//    SPI_init();
+//    UART_init();
+//    GPIO_init();
+//    Capture_init();
+//    Timer_init();
+//
+//    UART_Params_init(&uartDistanceSensorParams);
+//    uartDistanceSensorParams.writeMode = UART_MODE_BLOCKING;
+//    uartDistanceSensorParams.writeDataMode = UART_DATA_BINARY;
+//    uartDistanceSensorParams.baudRate = 115200;
+//    uartDistanceSensorParams.readEcho = UART_ECHO_OFF;
+//
+//    /* Open UART with header pin selected in sysconfig i.e. UART0 */
+//        UART0 = UART_open(UART_USB, &uartParams);
+//        if (UART0 == NULL) {
+//            /* Error creating UART */
+//            while (1);
+//        }
+//
+//        /* Block read since UART is write-only for this application */
+//        UART_control(UART0, UART_CMD_RXDISABLE, NULL);
+//
+//    /* Setting up the Capture driver to detect two rising edges and report
+//    * the result in microseconds
+////    */
+////    Capture_Params_init(&distanceCaptureParams);
+////    distanceCaptureParams.mode = Capture_ANY_EDGE;
+////    distanceCaptureParams.periodUnit = Capture_PERIOD_US;
+////    distanceCaptureParams.callbackFxn = distanceCaptureCallback;
+////
+////    // init timer
+////     Timer_Params_init(&distance_sensor_params);
+////     distance_sensor_params.period = DISTANCE_SENSOR_TIMER_PERIOD;
+////     distance_sensor_params.periodUnits = Timer_PERIOD_US;
+////     distance_sensor_params.timerMode = Timer_CONTINUOUS_CALLBACK;
+////     distance_sensor_params.timerCallback = distanceSensorTimerCallback;
+//
+//    /* Initialize the attributes structure with default values */
+//    pthread_attr_init(&attrs);
+//
+//    /* Set priority, detach state, and stack size attributes */
+//    priParam.sched_priority = 1;
+//    retc = pthread_attr_setschedparam(&attrs, &priParam);
+//    retc |= pthread_attr_setdetachstate(&attrs, PTHREAD_CREATE_DETACHED);
+//    retc |= pthread_attr_setstacksize(&attrs, THREADSTACKSIZE);
+//    if (retc != 0) {
+//        /* failed to set attributes */
+//        while (1) {}
+//    }
+//
+//#ifdef UART_DEBUGGING
+//    retc = pthread_create(&thread, &attrs, uartThread, NULL);
+//    if (retc != 0) {
+//        /* pthread_create() failed */
+//        while (1) {}
+//    }
+//#endif
+//
+//    retc = pthread_create(&thread, &attrs, sensorMainThread, NULL);
+//    if (retc != 0) {
+//        /* pthread_create() failed */
+//        while (1) {}
+//    }
+//
+//    retc = pthread_create(&thread, &attrs, mainThread, NULL);
+//    if (retc != 0) {
+//        /* pthread_create() failed */
+//        while (1) {}
+//    }
+//
+//    /* Start the FreeRTOS scheduler */
+//    vTaskStartScheduler();
+//
+//    dbgUARTVal("here");
+//
+//    return (0);
+
+
     pthread_t thread;
     pthread_attr_t pAttrs;
     struct sched_param priParam;
@@ -92,74 +178,47 @@ int main(void)
     GPIO_init();
     Capture_init();
 //    dbgUARTInit();
-//    UART_Params_init(&uartParams);
-//    uartParams.writeMode = UART_MODE_BLOCKING;
-//    uartParams.readMode = UART_MODE_BLOCKING;
-//    uartParams.writeDataMode = UART_DATA_BINARY;
-//    uartParams.readDataMode = UART_DATA_BINARY;
-//    uartParams.baudRate = 115200;
-//    uartParams.readEcho = UART_ECHO_OFF;
-//
-//    /* Open UART with header pin selected in sysconfig i.e. UART0 */
-//    UART0 = UART_open(UART_USB, &uartParams);
-//    if (UART0 == NULL) {
-//        /* Error creating UART */
-//        while (1);
-//    }
-//
-//    /* Block read since UART is write-only for this application */
-//    UART_control(UART0, UART_CMD_RXDISABLE, NULL);
+    UART_Params_init(&uartParams);
+    uartParams.writeMode = UART_MODE_BLOCKING;
+    uartParams.readMode = UART_MODE_BLOCKING;
+    uartParams.writeDataMode = UART_DATA_BINARY;
+    uartParams.readDataMode = UART_DATA_BINARY;
+    uartParams.baudRate = 115200;
+    uartParams.readEcho = UART_ECHO_OFF;
+
+    /* Open UART with header pin selected in sysconfig i.e. UART0 */
+    UART0 = UART_open(UART_USB, &uartParams);
+    if (UART0 == NULL) {
+        /* Error creating UART */
+        while (1);
+    }
+
+    /* Block read since UART is write-only for this application */
+    UART_control(UART0, UART_CMD_RXDISABLE, NULL);
 //
 //    /* Configure the LED pin */
-//    GPIO_setConfig(Board_TRIG, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
-//    GPIO_setConfig(Board_ECHO, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
-//    GPIO_setConfig(Board_GPIO0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
-//
-//    /* Turn off user LED */
-//    GPIO_write(Board_TRIG, 0);
-//    GPIO_write(Board_ECHO, 0);
-//    GPIO_write(Board_GPIO0, 0);
-//
-//    Timer_init();
-//    Timer_Params_init(&distance_sensor_params);
-//    distance_sensor_params.period = DISTANCE_SENSOR_TIMER_PERIOD;
-//    distance_sensor_params.periodUnits = Timer_PERIOD_US;
-//    distance_sensor_params.timerMode = Timer_CONTINUOUS_CALLBACK;
-//    distance_sensor_params.timerCallback = distanceSensorTimerCallback;
-//
-////    sendMsgToUart("before timer open \r\n\0");
-//
-//     distance_sensor_timer = Timer_open(DISTANCE_SENSOR_TIMER, &distance_sensor_params);
-//
-//     if (distance_sensor_timer == NULL) {
-//         /* Failed to initialized timer */
-////         errorRoutine(ENCODER_BUFFER_TIMER_ERROR);
-//         return TIMER_FAILURE;
-//     }
-//
-//     if (Timer_start(distance_sensor_timer) == Timer_STATUS_ERROR) {
-//         /* Failed to start timer */
-////         errorRoutine(ENCODER_BUFFER_TIMER_ERROR);
-//         return TIMER_FAILURE;
-//     }
-//
-//     Capture_Params_init(&distanceCaptureParams);
-//     distanceCaptureParams.mode = Capture_ANY_EDGE;
-//     distanceCaptureParams.periodUnit = Capture_PERIOD_US;
-//     distanceCaptureParams.callbackFxn = distanceCaptureCallback;
-//
-//     distanceCapture = Capture_open(Board_CAPTURE0, &distanceCaptureParams);
-//
-//     if (distanceCapture == NULL)
-//     {
-//         /* Failed to initialize capture */
-//         while(1) {}
-//     }
-//
-//     if (Capture_start(distanceCapture) == Capture_STATUS_ERROR) {
-//         /* Failed to start capture */
-//         while (1) {}
-//     }
+    GPIO_setConfig(Board_TRIG, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
+    GPIO_setConfig(Board_ECHO, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
+    GPIO_setConfig(Board_GPIO0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
+//    GPIO_setConfig(Board_GPIO1, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
+
+    /* Turn off user LED */
+    GPIO_write(Board_TRIG, 0);
+    GPIO_write(Board_ECHO, 0);
+    GPIO_write(Board_GPIO0, 0);
+//    GPIO_write(Board_GPIO1, 0);
+
+    Capture_Params_init(&distanceCaptureParams);
+    distanceCaptureParams.mode = Capture_ANY_EDGE;
+    distanceCaptureParams.periodUnit = Capture_PERIOD_US;
+    distanceCaptureParams.callbackFxn = distanceCaptureCallback;
+
+    Timer_init();
+    Timer_Params_init(&distance_sensor_params);
+    distance_sensor_params.period = DISTANCE_SENSOR_TIMER_PERIOD;
+    distance_sensor_params.periodUnits = Timer_PERIOD_US;
+    distance_sensor_params.timerMode = Timer_CONTINUOUS_CALLBACK;
+    distance_sensor_params.timerCallback = distanceSensorTimerCallback;
 
     /* Set priority and stack size attributes */
     pthread_attr_init(&pAttrs);
@@ -198,6 +257,46 @@ int main(void)
         }
     }
 
+//pthread_t Fthread;
+//   pthread_attr_t FAttrs;
+//   struct sched_param FpriParam;
+//
+//   /* Set priority and stack size attributes */
+//   pthread_attr_init(&FAttrs);
+//   FpriParam.sched_priority = 2;
+//
+//   detachState = PTHREAD_CREATE_DETACHED;
+//   retc = pthread_attr_setdetachstate(&FAttrs, detachState);
+//   if(retc != 0)
+//   {
+//       /* pthread_attr_setdetachstate() failed */
+//       while(1)
+//       {
+//           ;
+//       }
+//   }
+//
+//   pthread_attr_setschedparam(&FAttrs, &FpriParam);
+//
+//   retc |= pthread_attr_setstacksize(&FAttrs, 2048);
+//   if(retc != 0)
+//   {
+//       /* pthread_attr_setstacksize() failed */
+//       while(1)
+//       {
+//           ;
+//       }
+//   }
+//
+//   retc = pthread_create(&Fthread, &FAttrs, findDistanceTaskThread, NULL);
+//   if(retc != 0)
+//   {
+//       /* pthread_create() failed */
+//       while(1)
+//       {
+//           ;
+//       }
+//   }
 
 
 #ifdef UART_DEBUGGING
@@ -241,8 +340,9 @@ int main(void)
             ;
         }
     }
-
 #endif
+
+
 
 //    pthread_t Fthread;
 //    pthread_attr_t FAttrs;
@@ -288,6 +388,8 @@ int main(void)
 
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
+
+
 
     return (0);
 }
