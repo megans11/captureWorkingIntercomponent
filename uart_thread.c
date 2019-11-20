@@ -16,35 +16,24 @@
  */
 void *uartThread(void *arg0)
 {
-    // turn usb uart
-//    sleep(5);
-
-//    dbgUARTVal("in uart thread");
 
     createUartQueue();
 
     if (create_DistanceTaskQueue() == CREATE_QUEUE_FAILURE)
     {
-//        errorRoutine(CONTROL_QUEUE_CREATE_FAILURE);
-//        printf("Queue creation failed.\n");
+
     }
     else
     {
 //        printf("Queue creation succeeded\n");
     }
 
-//    dbgUARTInit();
 
     // Command variables
     char msg[UART_QUEUE_WIDTH] = "\r\nUart thread opened\r\n\0";
     dbgUARTVal(msg);
 
     sendMsgToUart("blocking read in uart \r\n\0");
-//
-//    sleep(2);
-//
-//
-//    init_distanceSensorTimer();
 
     distance_sensor_timer = Timer_open(DISTANCE_SENSOR_TIMER, &distance_sensor_params);
 

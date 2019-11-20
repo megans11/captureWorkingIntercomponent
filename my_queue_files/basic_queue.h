@@ -22,7 +22,7 @@
 typedef long message_type[2];
 
 // queue parameters
-#define QUEUE_LENGTH 32
+#define QUEUE_LENGTH 64
 #define QUEUE_WIDTH sizeof(message_type)
 
 // Return value definitions

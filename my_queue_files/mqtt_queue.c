@@ -31,11 +31,14 @@ int sendMsg_MqttQueue(char* topic, char * type, char* action){
 
     // Debug before sending within ISR/callback
     mqtt_msg_struct msg;
-    memset(msg.topic,'\0',sizeof(msg.topic));
-    memset(msg.payload,'\0',sizeof(msg.payload));
 
+//    memset(msg.payload,'\0',sizeof(msg.payload));
+
+//    strncpy(msg.topic, topic, strlen(topic));
+
+    memset(msg.topic,'\0',sizeof(msg.topic));
     strncpy(msg.topic, topic, strlen(topic));
-    strncpy(msg.payload, "{\"type\": \"%s\", \"action\": \"%s\", \"count\": %d}", msg_count);
+    sprintf(msg.payload, "{\"type\": \"%s\", \"action\": \"%s\", \"count\": %d}", type, action, msg_count);
 //    msg.type = type;
     msg.msg_type = PUBLISH_MESSAGE;
     msg.count = msg_count;

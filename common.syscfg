@@ -95,6 +95,8 @@ Capture1.timer.$assign = "Timer2";
 Capture1.timer.capturePin.$assign = "boosterpack.7"; // P05
 // Name - The C/C++ identifier used in applications as the index parameter passed to GPIO runtime APIs
 GPIO3.$name = "Board_GPIO0";
+// Assign pin
+GPIO3.gpioPin.$assign = "boosterpack.18"; // P08
 // Suggest solution
 SPI1.spi.$suggestSolution = "SPI0";
 // Suggest solution
@@ -109,5 +111,3 @@ SPI1.spi.ssPin.$suggestSolution = "50";
 SPI1.spi.dmaRxChannel.$suggestSolution = "UDMA_CH30";
 // Suggest solution
 SPI1.spi.dmaTxChannel.$suggestSolution = "UDMA_CH31";
-// Suggest solution
-GPIO3.gpioPin.$suggestSolution = "8";

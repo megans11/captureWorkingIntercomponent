@@ -28,6 +28,8 @@ void *findDistanceTaskThread(void *arg0)
 
     dbgUARTVal("in distance task thread");
 
+    sleep(2);
+
     // Command variables
     int msg_type;
     long msg_buffer;
@@ -51,10 +53,11 @@ void *findDistanceTaskThread(void *arg0)
             distance = distance / 1000; //turning nanoseconds into microseconds
             float cmDistance= (distance * .0343) / 2;
             char buffer[17];
-            snprintf(buffer, sizeof(buffer), "\r\n distance %ld", distance);
+            snprintf(buffer, sizeof(buffer), "distance %ld", distance);
 
-            sendMsg_MqttQueue("sensor", "rover", buffer);
+//            sendMsgToUart(buffer);
 
+            sendMsg_MqttQueue("distance", "distance", buffer);
 
 //            UART_write(distanceSensorUART, buffer, sizeof(buffer));
         }

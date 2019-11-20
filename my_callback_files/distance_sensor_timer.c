@@ -8,7 +8,7 @@
  */
 void distanceSensorTimerCallback(Timer_Handle myHandle) {
 
-    GPIO_toggle(Board_GPIO0);
+//    GPIO_toggle(Board_GPIO0);
     static int start = 0;
 
 //    sendMsgToUart("Timer Callback\r\n\0");
@@ -70,11 +70,6 @@ void distanceCaptureCallback(Capture_Handle handle, uint32_t interval)
         static int echo_rise = 1;
         static struct timespec current_time, last_time = {0,0};
 
-//        sendMsgToUart("Capture Callback\r\n\0");
-//        dbgUARTVal("callback");
-//        GPIO_toggle(Board_GPIO1);
-
-
         if (echo_rise == 1)
         {
 //            dbgUARTVal("before clock");
@@ -86,6 +81,8 @@ void distanceCaptureCallback(Capture_Handle handle, uint32_t interval)
             captureRiseDistanceTaskQueue(current_time);
 //            dbgUARTVal("after first queue");
 
+
+//            GPIO_toggle(Board_ECHO);
             echo_rise = 0;
 
         }
@@ -96,13 +93,14 @@ void distanceCaptureCallback(Capture_Handle handle, uint32_t interval)
 
             captureFallDistanceTaskQueue(last_time);
 
+
+//            GPIO_toggle(Board_ECHO);
             echo_rise = 1;
 
         }
 
+    GPIO_toggle(Board_GPIO0);
 
-//    GPIO_toggle(Board_ECHO);
-//    GPIO_toggle(Board_GPIO_LED0);
 }
 
 

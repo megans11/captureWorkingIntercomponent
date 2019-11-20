@@ -372,100 +372,51 @@ void * MqttClient(void *pvParameters)
     int myCount;
     char msg[64];
 
-    //Test a publish
-//    MQTT_publish("status", "{\"type\": \"arm\", \"action\":\"mqtt_ready\"}");
-
-//    sleep(2);
-//
-//    //SERVO THREAD START =============================================
-//            pthread_t servothread;
-//            pthread_attr_t servoAttrs;
-//            struct sched_param servopriParam;
-//
-//            /* Set priority and stack size attributes */
-//            pthread_attr_init(&servoAttrs);
-//            servopriParam.sched_priority = 4;
-//
-//            int detachStateServo = PTHREAD_CREATE_DETACHED;
-//            int retc = pthread_attr_setdetachstate(&servoAttrs, detachStateServo);
-//            if(retc != 0)
-//            {
-//                /* pthread_attr_setdetachstate() failed */
-//                while(1)
-//                {
-//                    ;
-//                }
-//            }
-//
-//            pthread_attr_setschedparam(&servoAttrs, &servopriParam);
-//
-//            retc |= pthread_attr_setstacksize(&servoAttrs, THREADSIZE);
-//            if(retc != 0)
-//            {
-//                /* pthread_attr_setstacksize() failed */
-//                while(1)
-//                {
-//                    ;
-//                }
-//            }
-//
-//            retc = pthread_create(&servothread, &servoAttrs, servoPositionThread, NULL);
-//            if(retc != 0)
-//            {
-//                /* pthread_create() failed */
-//                while(1)
-//                {
-//                    ;
-//                }
-//            }
-
     pthread_t Fthread;
-       pthread_attr_t FAttrs;
-       struct sched_param FpriParam;
+   pthread_attr_t FAttrs;
+   struct sched_param FpriParam;
 
-       /* Set priority and stack size attributes */
-       pthread_attr_init(&FAttrs);
-       FpriParam.sched_priority = 1;
+   /* Set priority and stack size attributes */
+   pthread_attr_init(&FAttrs);
+   FpriParam.sched_priority = 1;
 
-       int detachState = PTHREAD_CREATE_DETACHED;
-       int retc = pthread_attr_setdetachstate(&FAttrs, detachState);
-       if(retc != 0)
+   int detachState = PTHREAD_CREATE_DETACHED;
+   int retc = pthread_attr_setdetachstate(&FAttrs, detachState);
+   if(retc != 0)
+   {
+       /* pthread_attr_setdetachstate() failed */
+       while(1)
        {
-           /* pthread_attr_setdetachstate() failed */
-           while(1)
-           {
-               ;
-           }
+           ;
        }
+   }
 
-       pthread_attr_setschedparam(&FAttrs, &FpriParam);
+   pthread_attr_setschedparam(&FAttrs, &FpriParam);
 
-       retc |= pthread_attr_setstacksize(&FAttrs, 2048);
-       if(retc != 0)
+   retc |= pthread_attr_setstacksize(&FAttrs, 2048);
+   if(retc != 0)
+   {
+       /* pthread_attr_setstacksize() failed */
+       while(1)
        {
-           /* pthread_attr_setstacksize() failed */
-           while(1)
-           {
-               ;
-           }
+           ;
        }
+   }
 
-       retc = pthread_create(&Fthread, &FAttrs, findDistanceTaskThread, NULL);
-       if(retc != 0)
+   retc = pthread_create(&Fthread, &FAttrs, findDistanceTaskThread, NULL);
+   if(retc != 0)
+   {
+       /* pthread_create() failed */
+       while(1)
        {
-           /* pthread_create() failed */
-           while(1)
-           {
-               ;
-           }
+           ;
        }
+   }
 
 
 #ifdef UART_DEBUGGING
     sendMsgToUart(" init thread started\r\n\0");
 #endif
-    //SERVO THREAD END ===============================================
-
 
 
     for(;;)
@@ -479,6 +430,8 @@ void * MqttClient(void *pvParameters)
             switch(msg_buffer.msg_type)
             {
             case PUBLISH_MESSAGE:
+                sendMsgToUart("in publish\r\n\0");
+
                 /*send publish message                                       */
                 lRetVal = MQTT_publish(msg_buffer.topic, msg_buffer.payload);
                 break;
@@ -492,11 +445,6 @@ void * MqttClient(void *pvParameters)
                     sendMsgToUart(msg);
 
 #endif
-
-//                    if(strcmp(myType, "distance") == 0){
-////                        sendMsgToUart("sending to arm queue now\r\n\0");
-//                        pickUpBall_ArmControlQueue();
-//                    }
 
                     break;
 
